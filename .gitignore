@@ -1,21 +1,34 @@
+# Dependencies
 node_modules/
-.env.example
-.env.production
-*.log
-.DS_Store
-coverage/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build & coverage
 dist/
+coverage/
+
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-docker-compose.override.yml
+
+# OS & editor
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-Thumbs.db
-.DS_Store
+
+# Docker
+docker-compose.override.yml
+
+# Security
 *.pem
 *.key
 .aws/
