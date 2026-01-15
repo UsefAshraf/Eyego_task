@@ -1,11 +1,12 @@
 services:
-  # Kafka with KRaft (no Zookeeper needed)
+  # Kafka with KRaft (no Zookeeper needed) - MEMORY OPTIMIZED
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
     ports:
       - "9092:9092"
     environment:
+      # CRITICAL: Reduced memory allocation for t2.micro
       KAFKA_HEAP_OPTS: "-Xmx200M -Xms100M"
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -19,11 +20,20 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      KAFKA_LOG_RETENTION_HOURS: 168
-      KAFKA_LOG_RETENTION_BYTES: 1073741824
+      # Reduced retention for less disk usage
+      KAFKA_LOG_RETENTION_HOURS: 24
+      KAFKA_LOG_RETENTION_BYTES: 104857600
+      KAFKA_LOG_SEGMENT_BYTES: 52428800
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     networks:
       - event-network
+    # Resource limits for t2.micro
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+        reservations:
+          memory: 150M
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
       interval: 10s
@@ -31,23 +41,32 @@ services:
       retries: 10
       start_period: 30s
 
-  # MongoDB
+  # MongoDB - MEMORY OPTIMIZED
   mongodb:
     image: mongo:7
     container_name: mongodb
     ports:
       - "27017:27017"
+    # Reduced cache size for t2.micro
+    command: --wiredTigerCacheSizeGB 0.25
     volumes:
       - mongodb_data:/data/db
     networks:
       - event-network
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+        reservations:
+          memory: 150M
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Our Application
+  # Our Application - OPTIMIZED
   app:
     build:
       context: ..
@@ -68,9 +87,18 @@ services:
       KAFKA_CLIENT_ID: event-microservice
       KAFKA_GROUP_ID: activity-consumer-group
       KAFKA_TOPIC: user-activities
+      # Node.js memory limit
+      NODE_OPTIONS: "--max-old-space-size=200"
     networks:
       - event-network
     restart: unless-stopped
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+        reservations:
+          memory: 100M
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
       interval: 30s
@@ -84,3 +112,4 @@ networks:
 
 volumes:
   mongodb_data:
+    driver: local
