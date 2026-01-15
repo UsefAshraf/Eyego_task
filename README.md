@@ -2,12 +2,6 @@
 
 A scalable event-driven microservice for real-time processing of user activity logs, built with Node.js, Express, and Kafka.
 
-## 🚀 Live Demo
-
-The service is deployed on AWS (free tier EC2 instance):
-
-**Health Check:** [http://16.170.48.162:3000/health](http://16.170.48.162:3000/health)
-
 ## Architecture Overview
 
 When I started building this service, I wanted something that could grow with the project without becoming a nightmare to maintain. Here's why I made the choices I did:
@@ -75,13 +69,16 @@ npm run dev
 | GET    | `/api/activities` | Fetch activities with pagination/filters |
 | GET    | `/health`         | Health check endpoint                    |
 
+## Live Demo
+
+The service is deployed on AWS (free tier EC2 instance):
+
+**Health Check:** [http://16.170.48.162:3000/health](http://16.170.48.162:3000/health)
+
 ## What I'd Improve
 
 If I had more time, here's what I'd add:
 
-- [ ] Request rate limiting
-- [ ] Distributed tracing for debugging
-- [ ] Prometheus metrics endpoint
 - [ ] API documentation with Swagger
 
 ---
