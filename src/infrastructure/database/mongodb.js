@@ -6,7 +6,7 @@ const activitySchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
-    index: true  // Indexing for faster queries
+    index: true
   },
   action: {
     type: String,
@@ -16,7 +16,7 @@ const activitySchema = new mongoose.Schema({
   timestamp: {
     type: Date,
     default: Date.now,
-    index: true  // Index for time-based queries
+    index: true 
   },
   metadata: {
     type: mongoose.Schema.Types.Mixed,
@@ -24,7 +24,7 @@ const activitySchema = new mongoose.Schema({
   },
   ipAddress: String
 }, {
-  timestamps: true  // Adds createdAt and updatedAt
+  timestamps: true
 });
 
 // Compound index for common queries
@@ -36,9 +36,9 @@ const ActivityModel = mongoose.model('Activity', activitySchema);
 const connectDB = async () => {
   try {
     await mongoose.connect(config.mongodb.uri);
-    console.log('✅ MongoDB connected successfully');
+    console.log('MongoDB connected successfully');
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
+    console.error('MongoDB connection error:', error);
     process.exit(1);
   }
 };

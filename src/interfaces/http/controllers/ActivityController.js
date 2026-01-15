@@ -1,15 +1,12 @@
 const { validationResult } = require('express-validator');
-
 class ActivityController {
   constructor(createActivityUseCase, getActivitiesUseCase) {
     this.createActivityUseCase = createActivityUseCase;
     this.getActivitiesUseCase = getActivitiesUseCase;
   }
 
-  // POST /api/activities
   async createActivity(req, res, next) {
     try {
-      // Validation
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -22,13 +19,12 @@ class ActivityController {
 
       const result = await this.createActivityUseCase.execute(activityData);
       
-      res.status(202).json(result);  // 202 Accepted (async processing)
+      res.status(202).json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  // GET /api/activities
   async getActivities(req, res, next) {
     try {
       const filters = {

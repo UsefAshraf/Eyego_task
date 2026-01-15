@@ -8,7 +8,6 @@ class UserActivity {
     this.ipAddress = ipAddress;
   }
 
-  // Business logic can go here
   isRecentActivity() {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
     return this.timestamp > fiveMinutesAgo;

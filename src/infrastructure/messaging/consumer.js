@@ -12,7 +12,7 @@ class KafkaConsumer {
     if (!this.isConnected) {
       await this.consumer.connect();
       this.isConnected = true;
-      console.log('✅ Kafka Consumer connected');
+      console.log('Kafka Consumer connected');
     }
   }
 
@@ -20,9 +20,9 @@ class KafkaConsumer {
     await this.connect();
     await this.consumer.subscribe({
       topic: config.kafka.topic,
-      fromBeginning: true  // Start from beginning for testing
+      fromBeginning: true 
     });
-    console.log(`📥 Subscribed to topic: ${config.kafka.topic}`);
+    console.log(`Subscribed to topic: ${config.kafka.topic}`);
   }
 
   async startConsuming() {
@@ -31,23 +31,20 @@ class KafkaConsumer {
     await this.consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         try {
-          // Parse message
           const activityData = JSON.parse(message.value.toString());
           
-          console.log(`📨 Received message:`, {
+          console.log(`Received message:`, {
             topic,
             partition,
             offset: message.offset,
             data: activityData
           });
 
-          // Process through domain service
           await this.activityService.processActivity(activityData);
           
-          console.log('✅ Activity processed and stored');
+          console.log('Activity processed and stored');
         } catch (error) {
-          console.error('❌ Error processing message:', error);
-          // In production, you might want to send to dead letter queue
+          console.error('Error processing message:', error);
         }
       }
     });

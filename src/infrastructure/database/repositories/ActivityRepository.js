@@ -1,7 +1,5 @@
 const IActivityRepository = require('../../../domain/repositories/IActivityRepository');
 const { ActivityModel } = require('../mongodb');
-
-// Concrete implementation of repository
 class ActivityRepository extends IActivityRepository {
   async save(activity) {
     const doc = new ActivityModel(activity);
@@ -15,7 +13,6 @@ class ActivityRepository extends IActivityRepository {
   async findAll(filters = {}, pagination = {}) {
     const { skip = 0, limit = 10 } = pagination;
     
-    // Build query
     const query = {};
     if (filters.userId) query.userId = filters.userId;
     if (filters.action) query.action = filters.action;

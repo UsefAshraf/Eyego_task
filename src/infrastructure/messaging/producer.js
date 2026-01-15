@@ -11,7 +11,7 @@ class KafkaProducer {
     if (!this.isConnected) {
       await this.producer.connect();
       this.isConnected = true;
-      console.log('✅ Kafka Producer connected');
+      console.log('Kafka Producer connected');
     }
   }
 
@@ -23,17 +23,17 @@ class KafkaProducer {
         topic: topic || config.kafka.topic,
         messages: [
           {
-            key: message.userId,  // Partition by userId
+            key: message.userId,  
             value: JSON.stringify(message),
             timestamp: Date.now().toString()
           }
         ]
       });
       
-      console.log('📤 Message sent to Kafka:', result);
+      console.log('Message sent to Kafka:', result);
       return result;
     } catch (error) {
-      console.error('❌ Error sending message to Kafka:', error);
+      console.error('Error sending message to Kafka:', error);
       throw error;
     }
   }
